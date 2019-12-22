@@ -27,7 +27,7 @@
     "prebuild": "del-cli dist",
     "prepublishOnly": "npm run lint && npm run build",
     "pretest": "npm run build -- --sourcemap",
-    "test": "ava test/*.ts"
+    "test": "ava"
   },
   "files": [
     "dist",
