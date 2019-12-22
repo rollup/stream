@@ -11,6 +11,8 @@
 
 🍣 Stream Rollup build results
 
+This package exists to provide a streaming interface for Rollup builds. This is useful in situations where a build system is working with [vinyl files](https://github.com/gulpjs/vinyl), such as [`gulp.js`](https://gulpjs.com/).
+
 ## Requirements
 
 This plugin requires an [LTS](https://github.com/nodejs/Release) Node version (v8.0.0+) and Rollup v1.20.0+.
@@ -24,6 +26,75 @@ npm install @rollup/stream --save-dev
 ```
 
 ## Usage
+
+Assume a `src/index.js` file exists and contains code like the following:
+
+```js
+export default 'jingle bells, batman smells';
+```
+
+We can bundle `src/index.js` using streams such like:
+
+```js
+import rollupStream from '@rollup/stream';
+
+const { log } = console;
+const options = {
+  input: 'src/index.js',
+  output: { format: 'cjs' }
+};
+const stream = rollupStream(options);
+let bundle = '';
+
+stream.on('data', (data) => bundle += data);
+stream.on('end', () => log(bundle));
+```
+
+The preceding code will concatenate each chunk (or asset) and output the entire bundle's content when Rollup has completed bundling and the stream has ended.
+
+### Usage with Gulp
+
+Using Gulp requires piping Suppose one wanted to take the bundle content and run it through a minifier, such as [`terser`](https://www.npmjs.com/package/terser):
+
+```js
+import rollupStream from '@rollup/stream';
+import gulp from 'gulp';
+import terser from 'gulp-terser';
+import source from 'vinyl-source-stream';
+
+gulp.task('rollup', () => {
+  const options = { input: 'src/index.js' };
+  return rollupStream(options)
+    .pipe(source('bundle.js'))
+    .pipe(terser({ keep_fnames: true, mangle: false }))
+    .pipe(gulp.dest('dist'));
+});
+```
+
+### Using Sourcemaps
+
+Rollup can produce source maps by specifying the `sourcemap` output option. To use the generated sourcemaps with Gulp:
+
+```js
+import rollupStream from '@rollup/stream';
+import buffer from 'vinyl-buffer';
+import gulp from 'gulp';
+import sourcemaps from 'gulp-sourcemaps';
+import terser from 'gulp-terser';
+import source from 'vinyl-source-stream';
+
+gulp.task('rollup', () => {
+  const options = { input: 'src/index.js', output: { sourcemap: true } };
+  return rollupStream(options)
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(sourcemaps.write('dist'))
+    .pipe(gulp.dest('dist'));
+});
+```
+
+_(Example reproduced from https://github.com/Permutatrix/rollup-stream#readme)_
 
 ## Options
 

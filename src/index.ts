@@ -34,6 +34,7 @@ const build = async (options: RollupOptions, stream: Readable) => {
 const stream = (options: RollupOptions) => {
   const result = new Readable();
 
+  // stub _read() as it's not available on Readable stream, needed by gulp et al
   result._read = () => {}; // eslint-disable-line no-underscore-dangle
 
   build(options, result).catch(() => {});
