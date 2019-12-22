@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "lib": ["es6", "dom"],
+    "lib": ["es2017"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitOnError": true,

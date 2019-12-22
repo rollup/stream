@@ -3,38 +3,40 @@ import { Readable } from 'stream';
 import { rollup, RollupOptions } from 'rollup';
 
 const build = async (options: RollupOptions, stream: Readable) => {
-  const bundle = await rollup(options);
-  const { emit, push } = stream;
+  try {
+    const bundle = await rollup(options);
 
-  emit('bundle', bundle);
+    stream.emit('bundle', bundle);
 
-  const { output } = await bundle.generate(options);
+    const { output } = await bundle.generate(options);
 
-  // OuputChunk | OutputAsset. TypeScript can't destructure a union type.
-  for (const { code, isAsset, map, source } of output as any) {
-    if (isAsset) {
-      push(source);
-      continue; // eslint-disable-line no-continue
+    // OuputChunk | OutputAsset. TypeScript can't destructure a union type.
+    for (const { code, isAsset, map, source } of output as any) {
+      if (isAsset) {
+        stream.push(source);
+        continue; // eslint-disable-line no-continue
+      }
+
+      stream.push(code);
+
+      if (map) {
+        stream.push(`\n//# sourceMappingURL=${map.toUrl()}`);
+      }
     }
 
-    stream.push(code);
-
-    if (map) {
-      push(`\n//# sourceMappingURL=${map.toUrl()}`);
-    }
+    // signal end of write
+    stream.push(null);
+  } catch (error) {
+    stream.emit('error', error);
   }
-
-  // signal end of write
-  push(null);
 };
 
 const stream = (options: RollupOptions) => {
   const result = new Readable();
-  const { emit } = result;
 
   result._read = () => {}; // eslint-disable-line no-underscore-dangle
 
-  build(options, result).catch((error) => emit('error', error));
+  build(options, result).catch(() => {});
 
   return result;
 };

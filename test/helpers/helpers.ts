@@ -10,4 +10,9 @@ const read = (stream: Readable) =>
     });
   });
 
-export default { read };
+const wait = (event: string, stream: Readable) =>
+  new Promise((p) => {
+    stream.on(event, (data) => p(data));
+  });
+
+export default { read, wait };
