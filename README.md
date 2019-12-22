@@ -1,8 +1,14 @@
+[cover]: https://codecov.io/gh/rollup/stream/branch/master/graph/badge.svg
+[cover-url]: https://codecov.io/gh/rollup/stream
+[tests]: https://img.shields.io/circleci/project/github/rollup/stream.svg
+[tests-url]: https://circleci.com/gh/rollup/stream
 [npm]: https://img.shields.io/npm/v/@rollup/stream
 [npm-url]: https://www.npmjs.com/package/@rollup/stream
 [size]: https://packagephobia.now.sh/badge?p=@rollup/stream
 [size-url]: https://packagephobia.now.sh/result?p=@rollup/stream
 
+[![tests][tests]][tests-url]
+[![cover][cover]][cover-url]
 [![npm][npm]][npm-url]
 [![size][size]][size-url]
 [![libera manifesto](https://img.shields.io/badge/libera-manifesto-lightgrey.svg)](https://liberamanifesto.com)
