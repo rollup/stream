@@ -1,4 +1,14 @@
 version: 2
+
+unit_tests: &unit_tests
+  steps:
+    - checkout
+    - restore_cache:
+        key: dependency-cache-{{ checksum "package-lock.json" }}
+    - run:
+        name: Run unit tests.
+        command: npm run ci:test
+
 jobs:
   dependency_cache:
     docker:
@@ -55,9 +65,6 @@ jobs:
       - run:
           name: Run Security Check
           command: npm run security
-      - run:
-          name: Validate Commit Messages
-          command: npm run ci:lint:commits
 workflows:
   version: 2
   validate:

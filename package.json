@@ -18,7 +18,6 @@
     "build": "rollup -c",
     "ci:coverage": "nyc npm run test && nyc report --reporter=text-lcov > coverage.lcov",
     "ci:lint": "npm run build && npm run lint",
-    "ci:lint:commits": "commitlint --from=${CIRCLE_BRANCH} --to=${CIRCLE_SHA1}",
     "ci:test": "npm run test -- --verbose",
     "lint": "npm run lint:js && npm run lint:docs && npm run lint:package",
     "lint:docs": "prettier --single-quote --write README.md",
@@ -27,6 +26,7 @@
     "prebuild": "del-cli dist",
     "prepublishOnly": "npm run lint && npm run build",
     "pretest": "npm run build -- --sourcemap",
+    "security": "npm audit",
     "test": "ava"
   },
   "files": [

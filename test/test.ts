@@ -19,7 +19,7 @@ test('exports', async (t) => {
 
 test('return Readable', async (t) => {
   const stream = rollupStream({});
-  t.snapshot(stream.constructor);
+  t.snapshot(stream.constructor.name);
 });
 
 test('pass rollup errors', async (t) => {
