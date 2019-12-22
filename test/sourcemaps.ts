@@ -1,9 +1,19 @@
-import { Readable } from 'stream';
-
 import test from 'ava';
+
+import helpers from './helpers/helpers';
 
 import rollupStream from '..';
 
-test('sourcemap added', () => {});
+const { read } = helpers;
 
-test('no sourcemap', () => {});
+test('sourcemap added', async (t) => {
+  const stream = rollupStream({});
+  const result = await read(stream);
+  t.snapshot(result);
+});
+
+test('no sourcemap', async (t) => {
+  const stream = rollupStream({});
+  const result = await read(stream);
+  t.snapshot(result);
+});

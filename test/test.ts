@@ -1,24 +1,31 @@
-import { Readable } from 'stream';
-
 import test from 'ava';
+
+import helpers from './helpers/helpers';
 
 import rollupStream from '..';
 
-const read(stream: Readable) {
-  return new Promise((p, f) => {
-    let data = '';
-    stream.on('end', () => p(data));
-    stream.on('error', (err) => f(err));
-    stream.on('data', (chunk) => {
-      data += chunk.toString();
-    });
-  });
-}
+const { read } = helpers;
 
-test('exports', () => {});
+test('exports', async (t) => {
+  const stream = rollupStream({});
+  const result = await read(stream);
+  t.snapshot(result);
+});
 
-test('pass rollup errors', () => {});
+test('pass rollup errors', async (t) => {
+  const stream = rollupStream({});
+  const result = await read(stream);
+  t.snapshot(result);
+});
 
-test('return Readable', () => {});
+test('return Readable', async (t) => {
+  const stream = rollupStream({});
+  const result = await read(stream);
+  t.snapshot(result);
+});
 
-test('bundle event', () => {});
+test('bundle event', async (t) => {
+  const stream = rollupStream({});
+  const result = await read(stream);
+  t.snapshot(result);
+});
