@@ -1,77 +1,17 @@
 version: 2
-aliases:
-  - &checkout_master
-    name: checkout master
-    command: |
-      if [[ $(git rev-parse --abbrev-ref HEAD) != "master" ]]; then
-        git branch -f master origin/master;
-      fi
-  - &install_pnpm
-    name: Install pnpm
-    command: npm install pnpm@^4.0.0 -g
-  - &install_yarn
-    name: Install yarn
-    command: npm install yarn -g
-  - &pnpm_install
-    name: Install Dependencies
-    command: pnpm install --ignore-scripts
-  - &restore_cache
-    key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
-
-coverage: &coverage
-  steps:
-    - checkout
-    - run: *checkout_master
-    - restore_cache: *restore_cache
-    - run: *install_pnpm
-    - run: *install_yarn
-    - run: *pnpm_install
-    - run:
-        name: Run unit tests.
-        command: pnpm run ci:coverage
-    - run:
-        name: Submit coverage data to codecov.
-        command: pnpm run ci:coverage:submit
-        when: on_success
-
-unit_tests: &unit_tests
-  steps:
-    - checkout
-    - run: *checkout_master
-    - restore_cache: *restore_cache
-    - run: *install_pnpm
-    - run: *install_yarn
-    - run: *pnpm_install
-    - run:
-        name: Env Info
-        command: |
-          node --version
-          npm --version
-          pnpm --version
-    - run:
-        name: Run unit tests.
-        command: |
-          pnpm run ci:test
-          echo "prev return code: $?"
-
 jobs:
-  analysis:
+  dependency_cache:
     docker:
       - image: rollupcabal/circleci-node-base:latest
     steps:
       - checkout
-      - run: *checkout_master
-      - run: *install_pnpm
-      - restore_cache: *restore_cache
-      - run: *pnpm_install
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: Run Security Checks
-          command: pnpm run security
-      - run:
-          name: Run linting.
-          command: pnpm run ci:lint
+          name: Install Dependencies
+          command: npm install
       - save_cache:
-          key: dependency-cache-{{ checksum "pnpm-lock.yaml" }}
+          key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
   node-v8-latest:
@@ -85,17 +25,51 @@ jobs:
   node-v12-latest:
     docker:
       - image: rollupcabal/circleci-node-v12:latest
-    <<: *coverage
-
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: NPM Rebuild
+          command: npm install
+      - run:
+          name: Run unit tests.
+          command: npm run ci:coverage
+      - run:
+          name: Submit coverage data to codecov.
+          command: bash <(curl -s https://codecov.io/bash)
+          when: on_success
+  analysis:
+    docker:
+      - image: rollupcabal/circleci-node-base:latest
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: NPM Rebuild
+          command: npm install
+      - run:
+          name: Run linting.
+          command: npm run lint
+      - run:
+          name: Run Security Check
+          command: npm run security
+      - run:
+          name: Validate Commit Messages
+          command: npm run ci:lint:commits
 workflows:
   version: 2
-  validate-test:
+  validate:
     jobs:
+      - dependency_cache
       - analysis:
+          requires:
+            - dependency_cache
           filters:
             tags:
               only: /.*/
-      - node-v8-latest:
+      - node-v12-latest:
           requires:
             - analysis
           filters:
@@ -107,7 +81,7 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - node-v12-latest:
+      - node-v8-latest:
           requires:
             - analysis
           filters:

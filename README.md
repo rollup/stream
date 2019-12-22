@@ -25,8 +25,6 @@ npm install @rollup/stream --save-dev
 
 ## Usage
 
-
-
 ## Options
 
 All [Rollup options](https://www.rollupjs.org/guide/en/#configuration-files) are valid to pass as options to `@rollup/stream`.
