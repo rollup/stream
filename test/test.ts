@@ -2,7 +2,7 @@ import { join } from 'path';
 
 import test from 'ava';
 
-import { OutputOptions } from 'rollup';
+import { OutputOptions, RollupBuild } from 'rollup';
 
 import helpers from './helpers/helpers';
 
@@ -18,20 +18,21 @@ test('exports', async (t) => {
 });
 
 test('return Readable', async (t) => {
-  const stream = rollupStream({});
-  t.snapshot(stream.constructor.name);
+  const stream = rollupStream({}).on('error', () => {});
+  t.is(stream.constructor.name, 'Readable');
 });
 
 test('pass rollup errors', async (t) => {
   const stream = rollupStream({});
   const result = await wait('error', stream);
   t.truthy(result);
+  t.truthy(result instanceof Error);
   t.snapshot(result);
 });
 
 test('bundle event', async (t) => {
   const stream = rollupStream({ input, output });
-  const bundle: any = await wait('bundle', stream);
+  const bundle = (await wait('bundle', stream)) as RollupBuild;
   t.truthy(bundle);
   t.snapshot(bundle.cache.modules[0].ast);
   t.snapshot(bundle.cache.modules[0].code);

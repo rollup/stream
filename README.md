@@ -60,7 +60,7 @@ The preceding code will concatenate each chunk (or asset) and output the entire 
 
 ### Usage with Gulp
 
-Using Gulp requires piping Suppose one wanted to take the bundle content and run it through a minifier, such as [`terser`](https://www.npmjs.com/package/terser):
+Using Gulp requires piping. Suppose one wanted to take the bundle content and run it through a minifier, such as [`terser`](https://www.npmjs.com/package/terser):
 
 ```js
 import rollupStream from '@rollup/stream';
