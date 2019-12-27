@@ -86,7 +86,6 @@ import rollupStream from '@rollup/stream';
 import buffer from 'vinyl-buffer';
 import gulp from 'gulp';
 import sourcemaps from 'gulp-sourcemaps';
-import terser from 'gulp-terser';
 import source from 'vinyl-source-stream';
 
 gulp.task('rollup', () => {
@@ -100,7 +99,49 @@ gulp.task('rollup', () => {
 });
 ```
 
-_(Example reproduced from https://github.com/Permutatrix/rollup-stream#readme)_
+### Watching for changes
+
+To optimize build times, you will need to make use of the `cache` option when watching for file changes:
+
+```js
+import rollupStream from '@rollup/stream';
+import buffer from 'vinyl-buffer';
+import gulp from 'gulp';
+import source from 'vinyl-source-stream';
+
+// cache variable needs to be stored outside the gulp task
+let cache;
+
+gulp.task('rollup', () => {
+  const options = {
+    input: 'src/index.js',
+    // Apply cache in the options object
+    cache: cache,
+  };
+  return rollupStream(options)
+    .on('bundle', bundle => {
+      // Update the cache data after every new bundle is created
+      cache = bundle;
+    })
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(gulp.dest('dist'));
+});
+
+gulp.task('watch', done => {
+
+  // Gulp 4
+  gulp.watch('./src/**/*.js', gulp.series('rollup'));
+
+  // Gulp 3
+  gulp.watch('./src/**/*.js', ['rollup']);
+
+  done();
+});
+
+```
+
+_(Example reproduced from [Rollup-Stream readme](https://github.com/Permutatrix/rollup-stream#readme))_
 
 ## Options
 
