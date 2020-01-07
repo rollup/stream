@@ -58,6 +58,10 @@ stream.on('end', () => log(bundle));
 
 The preceding code will concatenate each chunk (or asset) and output the entire bundle's content when Rollup has completed bundling and the stream has ended.
 
+## Options
+
+All [Rollup options](https://www.rollupjs.org/guide/en/#configuration-files) are valid to pass as options to `@rollup/stream`.
+
 ### Usage with Gulp
 
 Using Gulp requires piping. Suppose one wanted to take the bundle content and run it through a minifier, such as [`terser`](https://www.npmjs.com/package/terser):
@@ -79,7 +83,7 @@ gulp.task('rollup', () => {
 
 ### Using Sourcemaps
 
-Rollup can produce source maps by specifying the `sourcemap` output option. To use the generated sourcemaps with Gulp:
+Rollup can produce source maps by specifying the `sourcemap` output option. For example; to use the generated sourcemaps with Gulp and `@rollup/stream`:
 
 ```js
 import rollupStream from '@rollup/stream';
@@ -99,9 +103,9 @@ gulp.task('rollup', () => {
 });
 ```
 
-### Watching for changes
+### Caching
 
-To optimize build times, you will need to make use of the `cache` option when watching for file changes:
+The ability to cache a build is already [built into Rollup](https://www.rollupjs.org/guide/en/#cache), so users of `@rollup/stream` get that for free. Caching can be useful to reduce or optimize build times, and is often used when watching files that are part of a build. For example; to utilize caching with Gulp and `@rollup/stream`:
 
 ```js
 import rollupStream from '@rollup/stream';
@@ -109,18 +113,17 @@ import buffer from 'vinyl-buffer';
 import gulp from 'gulp';
 import source from 'vinyl-source-stream';
 
-// cache variable needs to be stored outside the gulp task
+// declare the cache variable outside of task scopes
 let cache;
 
 gulp.task('rollup', () => {
-  const options = {
-    input: 'src/index.js',
-    // Apply cache in the options object
-    cache: cache,
-  };
-  return rollupStream(options)
-    .on('bundle', bundle => {
-      // Update the cache data after every new bundle is created
+  return rollupStream({
+      input: 'src/index.js',
+      // define the cache in Rollup options
+      cache,
+    })
+    .on('bundle', (bundle) => {
+      // update the cache after every new bundle is created
       cache = bundle;
     })
     .pipe(source('bundle.js'))
@@ -128,24 +131,18 @@ gulp.task('rollup', () => {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('watch', done => {
-
-  // Gulp 4
+gulp.task('watch', (done) => {
   gulp.watch('./src/**/*.js', gulp.series('rollup'));
 
-  // Gulp 3
-  gulp.watch('./src/**/*.js', ['rollup']);
+  // or, with Gulp v3
+  // gulp.watch('./src/**/*.js', ['rollup']);
 
   done();
 });
 
 ```
 
-_(Example reproduced from [Rollup-Stream readme](https://github.com/Permutatrix/rollup-stream#readme))_
-
-## Options
-
-All [Rollup options](https://www.rollupjs.org/guide/en/#configuration-files) are valid to pass as options to `@rollup/stream`.
+_(Example based on the [rollup-stream README](https://github.com/Permutatrix/rollup-stream#readme))_
 
 ## Meta
 
