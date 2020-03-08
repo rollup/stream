@@ -2,7 +2,7 @@ import { join } from 'path';
 
 import test from 'ava';
 
-import { OutputOptions, RollupBuild } from 'rollup';
+import { OutputOptions, RollupBuild, Plugin } from 'rollup';
 
 import helpers from './helpers/helpers';
 
@@ -43,4 +43,25 @@ test('read content', async (t) => {
   const result = await read(stream);
   t.truthy(result);
   t.snapshot(result);
+});
+
+test('plugin build no warnings', async (t) => {
+  let noWarnings = true;
+  const testPlugin: Plugin = {
+    name: 'test-plugin',
+    buildStart: () => {},
+  };
+  const plugins = [ testPlugin ];
+  const stream = rollupStream({
+    input,
+    output,
+    plugins,
+    onwarn: () => {
+      noWarnings = false;
+    },
+  });
+  const result = await read(stream);
+  t.truthy(result);
+  t.truthy(noWarnings);
+  t.snapshot(noWarnings);
 });

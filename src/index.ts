@@ -7,7 +7,7 @@ const build = async (options: RollupOptions, stream: Readable) => {
 
   stream.emit('bundle', bundle);
 
-  const { output } = await bundle.generate(options);
+  const { output } = await bundle.generate(options.output);
 
   for (const chunk of output) {
     if (chunk.type === 'asset') {
