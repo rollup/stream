@@ -1,6 +1,6 @@
 {
   "name": "@rollup/stream",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "publishConfig": {
     "access": "public"
   },
@@ -12,7 +12,7 @@
   "bugs": "https://github.com/rollup/stream/issues",
   "main": "dist/index.js",
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">= 10.20.1"
   },
   "scripts": {
     "build": "rollup -c",
@@ -41,32 +41,31 @@
     "utils"
   ],
   "peerDependencies": {
-    "rollup": "^1.20.0"
+    "rollup": "^1.20.0 || ^2.0.0"
   },
   "dependencies": {},
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.0",
-    "@rollup/plugin-node-resolve": "^6.0.0",
-    "@rollup/plugin-typescript": "^2.0.1",
-    "@types/node": "^12.12.11",
+    "@rollup/plugin-node-resolve": "^7.1.3",
+    "@rollup/plugin-typescript": "^4.1.1",
+    "@types/node": "^13.13.4",
     "@typescript-eslint/eslint-plugin": "^2.8.0",
     "@typescript-eslint/parser": "^2.8.0",
-    "ava": "^2.4.0",
+    "ava": "^3.8.1",
     "del-cli": "^3.0.0",
     "eslint-config-rollup": "^0.1.0",
-    "husky": "^3.1.0",
-    "lint-staged": "^9.4.3",
-    "nyc": "^14.1.1",
-    "prettier": "^1.19.1",
-    "prettier-plugin-package": "^0.3.1",
-    "rollup": "^1.27.2",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.2",
+    "nyc": "^15.0.1",
+    "prettier": "^2.0.5",
+    "prettier-plugin-package": "^1.0.0",
+    "rollup": "^2.7.6",
     "ts-node": "^8.5.2",
     "tsconfig-paths": "^3.9.0",
     "tslib": "^1.10.0",
     "typescript": "^3.7.2"
   },
   "ava": {
-    "compileEnhancements": false,
     "extensions": [
       "ts"
     ],

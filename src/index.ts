@@ -1,13 +1,13 @@
 import { Readable } from 'stream';
 
-import { rollup, RollupOptions } from 'rollup';
+import { rollup, OutputOptions, RollupOptions } from 'rollup';
 
 const build = async (options: RollupOptions, stream: Readable) => {
   const bundle = await rollup(options);
 
   stream.emit('bundle', bundle);
 
-  const { output } = await bundle.generate(options.output);
+  const { output } = await bundle.generate(options.output as OutputOptions);
 
   for (const chunk of output) {
     if (chunk.type === 'asset') {
