@@ -11,6 +11,7 @@
   "homepage": "https://github.com/rollup/stream#readme",
   "bugs": "https://github.com/rollup/stream/issues",
   "main": "dist/index.js",
+  "module": "dist/index.es.js",
   "engines": {
     "node": ">= 10.20.1"
   },
@@ -26,7 +27,7 @@
     "prebuild": "del-cli dist",
     "prepublishOnly": "npm run lint && npm run build",
     "pretest": "npm run build -- --sourcemap",
-    "security": "npm audit",
+    "security": "npm audit --audit-level=moderate",
     "test": "ava"
   },
   "files": [
@@ -65,6 +66,7 @@
     "tslib": "^1.10.0",
     "typescript": "^3.7.2"
   },
+  "types": "types/index.d.ts",
   "ava": {
     "extensions": [
       "ts"
@@ -79,12 +81,10 @@
       "!**/types.ts"
     ]
   },
-  "module": "dist/index.es.js",
   "nyc": {
     "extension": [
       ".js",
       ".ts"
     ]
-  },
-  "types": "types/index.d.ts"
+  }
 }
