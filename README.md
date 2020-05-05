@@ -47,12 +47,12 @@ import rollupStream from '@rollup/stream';
 const { log } = console;
 const options = {
   input: 'src/index.js',
-  output: { format: 'cjs' }
+  output: { format: 'cjs' },
 };
 const stream = rollupStream(options);
 let bundle = '';
 
-stream.on('data', (data) => bundle += data);
+stream.on('data', (data) => (bundle += data));
 stream.on('end', () => log(bundle));
 ```
 
@@ -97,7 +97,7 @@ gulp.task('rollup', () => {
   return rollupStream(options)
     .pipe(source('bundle.js'))
     .pipe(buffer())
-    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(sourcemaps.write('dist'))
     .pipe(gulp.dest('dist'));
 });
@@ -118,10 +118,10 @@ let cache;
 
 gulp.task('rollup', () => {
   return rollupStream({
-      input: 'src/index.js',
-      // define the cache in Rollup options
-      cache,
-    })
+    input: 'src/index.js',
+    // define the cache in Rollup options
+    cache,
+  })
     .on('bundle', (bundle) => {
       // update the cache after every new bundle is created
       cache = bundle;
@@ -139,7 +139,6 @@ gulp.task('watch', (done) => {
 
   done();
 });
-
 ```
 
 _(Example based on the [rollup-stream README](https://github.com/Permutatrix/rollup-stream#readme))_
