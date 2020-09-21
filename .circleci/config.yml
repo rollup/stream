@@ -19,7 +19,7 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: Install Dependencies
-          command: npm install
+          command: npm ci
       - save_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
@@ -31,13 +31,14 @@ jobs:
   node-v12-latest:
     docker:
       - image: rollupcabal/circleci-node-v12:latest
+    <<: *unit_tests
+  node-v14-latest:
+    docker:
+      - image: rollupcabal/circleci-node-v14:latest
     steps:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
-      - run:
-          name: NPM Rebuild
-          command: npm install
       - run:
           name: Run unit tests.
           command: npm run ci:coverage
@@ -53,9 +54,6 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: NPM Rebuild
-          command: npm install
-      - run:
           name: Run linting.
           command: npm run lint
       - run:
@@ -66,6 +64,12 @@ workflows:
   validate:
     jobs:
       - dependency_cache
+      - node-v14-latest:
+          requires:
+            - dependency_cache
+          filters:
+            tags:
+              only: /.*/
       - analysis:
           requires:
             - dependency_cache
@@ -74,13 +78,13 @@ workflows:
               only: /.*/
       - node-v12-latest:
           requires:
-            - analysis
+            - dependency_cache
           filters:
             tags:
               only: /.*/
       - node-v10-latest:
           requires:
-            - analysis
+            - dependency_cache
           filters:
             tags:
               only: /.*/
