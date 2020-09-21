@@ -13,7 +13,7 @@ export default {
   ],
   external: ['path', 'rollup', 'stream'],
   output: [
-    { format: 'cjs', file: pkg.main },
+    { format: 'cjs', file: pkg.main, exports: 'auto' },
     { format: 'es', file: pkg.module }
   ]
 };
