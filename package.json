@@ -42,13 +42,13 @@
     "utils"
   ],
   "peerDependencies": {
-    "rollup": "^1.20.0 || ^2.0.0"
+    "rollup": "^2.35.1"
   },
   "dependencies": {},
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^15.0.0",
-    "@rollup/plugin-node-resolve": "^9.0.0",
-    "@rollup/plugin-typescript": "^6.0.0",
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "@rollup/plugin-typescript": "^8.1.0",
     "@types/node": "^14.11.1",
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
@@ -58,7 +58,7 @@
     "nyc": "^15.1.0",
     "prettier": "^2.1.2",
     "prettier-plugin-package": "^1.0.0",
-    "rollup": "^2.7.6",
+    "rollup": "^2.35.1",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",
     "tslib": "^2.0.1",
